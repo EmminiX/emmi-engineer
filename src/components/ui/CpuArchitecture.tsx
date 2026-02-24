@@ -14,6 +14,18 @@ export interface CpuArchitectureProps {
   animateMarkers?: boolean;
 }
 
+/* Each orb: path data (same as visible path), gradient id, duration, delay */
+const ORBS = [
+  { path: "M 10 20 h 79.5 q 5 0 5 5 v 24", grad: "cpu-blue-grad", dur: "3.5s", delay: "0s" },
+  { path: "M 180 10 h -69.7 q -5 0 -5 5 v 24", grad: "cpu-yellow-grad", dur: "4s", delay: "0.3s" },
+  { path: "M 130 20 v 21.8 q 0 5 -5 5 h -10", grad: "cpu-pinkish-grad", dur: "3s", delay: "0.6s" },
+  { path: "M 170 80 v -21.8 q 0 -5 -5 -5 h -50", grad: "cpu-white-grad", dur: "3.8s", delay: "0.2s" },
+  { path: "M 135 65 h 15 q 5 0 5 5 v 10 q 0 5 -5 5 h -39.8 q -5 0 -5 -5 v -20", grad: "cpu-green-grad", dur: "5s", delay: "0.5s" },
+  { path: "M 94.8 95 v -36", grad: "cpu-orange-grad", dur: "2.8s", delay: "0.8s" },
+  { path: "M 88 88 v -15 q 0 -5 -5 -5 h -10 q -5 0 -5 -5 v -5 q 0 -5 5 -5 h 14", grad: "cpu-cyan-grad", dur: "4.5s", delay: "0.4s" },
+  { path: "M 30 30 h 25 q 5 0 5 5 v 6.5 q 0 5 5 5 h 20", grad: "cpu-rose-grad", dur: "3.2s", delay: "0.7s" },
+];
+
 export function CpuArchitecture({
   className = "",
   width = "100%",
@@ -63,31 +75,21 @@ export function CpuArchitecture({
         )}
       </g>
 
-      {/* Colored light orbs traveling along paths */}
-      <g mask="url(#cpu-mask-1)">
-        <circle className="cpu-architecture cpu-line-1" cx="0" cy="0" r="8" fill="url(#cpu-blue-grad)" />
-      </g>
-      <g mask="url(#cpu-mask-2)">
-        <circle className="cpu-architecture cpu-line-2" cx="0" cy="0" r="8" fill="url(#cpu-yellow-grad)" />
-      </g>
-      <g mask="url(#cpu-mask-3)">
-        <circle className="cpu-architecture cpu-line-3" cx="0" cy="0" r="8" fill="url(#cpu-pinkish-grad)" />
-      </g>
-      <g mask="url(#cpu-mask-4)">
-        <circle className="cpu-architecture cpu-line-4" cx="0" cy="0" r="8" fill="url(#cpu-white-grad)" />
-      </g>
-      <g mask="url(#cpu-mask-5)">
-        <circle className="cpu-architecture cpu-line-5" cx="0" cy="0" r="8" fill="url(#cpu-green-grad)" />
-      </g>
-      <g mask="url(#cpu-mask-6)">
-        <circle className="cpu-architecture cpu-line-6" cx="0" cy="0" r="8" fill="url(#cpu-orange-grad)" />
-      </g>
-      <g mask="url(#cpu-mask-7)">
-        <circle className="cpu-architecture cpu-line-7" cx="0" cy="0" r="8" fill="url(#cpu-cyan-grad)" />
-      </g>
-      <g mask="url(#cpu-mask-8)">
-        <circle className="cpu-architecture cpu-line-8" cx="0" cy="0" r="8" fill="url(#cpu-rose-grad)" />
-      </g>
+      {/* Colored light orbs — using SVG animateMotion for cross-browser support */}
+      {ORBS.map((orb, i) => (
+        <g key={i} mask={`url(#cpu-mask-${i + 1})`}>
+          <circle cx="0" cy="0" r="8" fill={`url(#${orb.grad})`}>
+            <animateMotion
+              path={orb.path}
+              dur={orb.dur}
+              begin={orb.delay}
+              repeatCount="indefinite"
+              calcMode="linear"
+              fill="freeze"
+            />
+          </circle>
+        </g>
+      ))}
 
       {/* CPU Box */}
       <g>

@@ -45,7 +45,7 @@ export default function HeroSection() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.5 }}
-        className="h-8 flex items-center justify-center"
+        className="min-h-8 flex items-center justify-center"
       >
         <TypewriterText
           strings={ROLES}
