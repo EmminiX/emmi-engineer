@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
-import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useState, useEffect } from "react";
 
 interface TypewriterTextProps {
   strings: readonly string[];
@@ -18,75 +17,59 @@ export function TypewriterText({
   pauseDuration = 2000,
   className = "",
 }: TypewriterTextProps) {
-  const reducedMotion = useReducedMotion();
   const [displayed, setDisplayed] = useState("");
-  const charIndex = useRef(0);
-  const stringIndex = useRef(0);
-  const isDeleting = useRef(false);
-  const cancelled = useRef(false);
+  const [stringIndex, setStringIndex] = useState(0);
 
   useEffect(() => {
-    if (reducedMotion) {
-      setDisplayed(strings[0]);
-      return;
-    }
+    // Single interval state machine — no recursive setTimeout,
+    // no dangling callbacks, one cleanup. Reliable on mobile.
+    let charIdx = 0;
+    let strIdx = 0;
+    let phase: "typing" | "pausing" | "deleting" = "typing";
+    let lastAction = Date.now();
+    let pauseStart = 0;
 
-    cancelled.current = false;
-    charIndex.current = 0;
-    stringIndex.current = 0;
-    isDeleting.current = false;
-    setDisplayed("");
+    const id = setInterval(() => {
+      const now = Date.now();
+      const current = strings[strIdx];
 
-    function schedule(fn: () => void, ms: number) {
-      if (!cancelled.current) {
-        setTimeout(() => {
-          if (!cancelled.current) fn();
-        }, ms);
-      }
-    }
-
-    function tick() {
-      if (cancelled.current) return;
-
-      const current = strings[stringIndex.current];
-
-      if (!isDeleting.current) {
-        if (charIndex.current < current.length) {
-          charIndex.current++;
-          setDisplayed(current.slice(0, charIndex.current));
-          schedule(tick, typingSpeed + Math.random() * 40);
-        } else {
-          schedule(() => {
-            isDeleting.current = true;
-            tick();
-          }, pauseDuration);
+      if (phase === "typing") {
+        if (now - lastAction >= typingSpeed) {
+          if (charIdx < current.length) {
+            charIdx++;
+            setDisplayed(current.slice(0, charIdx));
+            lastAction = now;
+          } else {
+            phase = "pausing";
+            pauseStart = now;
+          }
         }
-      } else {
-        if (charIndex.current > 0) {
-          charIndex.current--;
-          setDisplayed(current.slice(0, charIndex.current));
-          schedule(tick, deletingSpeed);
-        } else {
-          isDeleting.current = false;
-          stringIndex.current = (stringIndex.current + 1) % strings.length;
-          schedule(tick, typingSpeed);
+      } else if (phase === "pausing") {
+        if (now - pauseStart >= pauseDuration) {
+          phase = "deleting";
+          lastAction = now;
+        }
+      } else if (phase === "deleting") {
+        if (now - lastAction >= deletingSpeed) {
+          if (charIdx > 0) {
+            charIdx--;
+            setDisplayed(current.slice(0, charIdx));
+            lastAction = now;
+          } else {
+            strIdx = (strIdx + 1) % strings.length;
+            setStringIndex(strIdx);
+            phase = "typing";
+            lastAction = now;
+          }
         }
       }
-    }
+    }, 30);
 
-    schedule(tick, typingSpeed);
-
-    return () => {
-      cancelled.current = true;
-    };
-  }, [reducedMotion, strings, typingSpeed, deletingSpeed, pauseDuration]);
-
-  if (reducedMotion) {
-    return <span className={className}>{strings[0]}</span>;
-  }
+    return () => clearInterval(id);
+  }, [strings, typingSpeed, deletingSpeed, pauseDuration]);
 
   return (
-    <span className={className} aria-label={strings[stringIndex.current]}>
+    <span className={className} aria-label={strings[stringIndex]}>
       <span aria-hidden="true">
         {displayed}
         <span className="typewriter-cursor" />
