@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 interface TypewriterTextProps {
@@ -20,12 +20,10 @@ export function TypewriterText({
 }: TypewriterTextProps) {
   const reducedMotion = useReducedMotion();
   const [displayed, setDisplayed] = useState("");
-  const stateRef = useRef({
-    charIndex: 0,
-    stringIndex: 0,
-    isDeleting: false,
-  });
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const charIndex = useRef(0);
+  const stringIndex = useRef(0);
+  const isDeleting = useRef(false);
+  const cancelled = useRef(false);
 
   useEffect(() => {
     if (reducedMotion) {
@@ -33,40 +31,53 @@ export function TypewriterText({
       return;
     }
 
-    function tick() {
-      const s = stateRef.current;
-      const current = strings[s.stringIndex];
+    cancelled.current = false;
+    charIndex.current = 0;
+    stringIndex.current = 0;
+    isDeleting.current = false;
+    setDisplayed("");
 
-      if (!s.isDeleting) {
-        if (s.charIndex < current.length) {
-          s.charIndex++;
-          setDisplayed(current.slice(0, s.charIndex));
-          timerRef.current = setTimeout(tick, typingSpeed + Math.random() * 40);
+    function schedule(fn: () => void, ms: number) {
+      if (!cancelled.current) {
+        setTimeout(() => {
+          if (!cancelled.current) fn();
+        }, ms);
+      }
+    }
+
+    function tick() {
+      if (cancelled.current) return;
+
+      const current = strings[stringIndex.current];
+
+      if (!isDeleting.current) {
+        if (charIndex.current < current.length) {
+          charIndex.current++;
+          setDisplayed(current.slice(0, charIndex.current));
+          schedule(tick, typingSpeed + Math.random() * 40);
         } else {
-          // Done typing — pause then start deleting
-          timerRef.current = setTimeout(() => {
-            s.isDeleting = true;
+          schedule(() => {
+            isDeleting.current = true;
             tick();
           }, pauseDuration);
         }
       } else {
-        if (s.charIndex > 0) {
-          s.charIndex--;
-          setDisplayed(current.slice(0, s.charIndex));
-          timerRef.current = setTimeout(tick, deletingSpeed);
+        if (charIndex.current > 0) {
+          charIndex.current--;
+          setDisplayed(current.slice(0, charIndex.current));
+          schedule(tick, deletingSpeed);
         } else {
-          // Done deleting — next string
-          s.isDeleting = false;
-          s.stringIndex = (s.stringIndex + 1) % strings.length;
-          timerRef.current = setTimeout(tick, typingSpeed);
+          isDeleting.current = false;
+          stringIndex.current = (stringIndex.current + 1) % strings.length;
+          schedule(tick, typingSpeed);
         }
       }
     }
 
-    timerRef.current = setTimeout(tick, typingSpeed);
+    schedule(tick, typingSpeed);
 
     return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
+      cancelled.current = true;
     };
   }, [reducedMotion, strings, typingSpeed, deletingSpeed, pauseDuration]);
 
@@ -75,7 +86,7 @@ export function TypewriterText({
   }
 
   return (
-    <span className={className} aria-label={strings[stateRef.current.stringIndex]}>
+    <span className={className} aria-label={strings[stringIndex.current]}>
       <span aria-hidden="true">
         {displayed}
         <span className="typewriter-cursor" />
