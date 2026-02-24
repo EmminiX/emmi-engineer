@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Lexend } from "next/font/google";
+import { Analytics as VercelAnalytics } from "@vercel/analytics/next";
 import Analytics from "@/components/Analytics";
 import "./globals.css";
 
@@ -162,6 +163,7 @@ export default function RootLayout({
       <body className={`${lexend.className} antialiased min-h-screen`}>
         <Analytics />
         {children}
+        <VercelAnalytics />
       </body>
     </html>
   );
