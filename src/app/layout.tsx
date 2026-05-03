@@ -1,13 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { Lexend } from "next/font/google";
+import { JetBrains_Mono } from "next/font/google";
 import { Analytics as VercelAnalytics } from "@vercel/analytics/next";
 import Analytics from "@/components/Analytics";
 import "./globals.css";
 
-const lexend = Lexend({
+const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-lexend",
+  variable: "--font-mono",
 });
 
 const SITE_URL = "https://emmi.engineer";
@@ -63,8 +63,8 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#0a0a0f" },
-    { media: "(prefers-color-scheme: light)", color: "#0a0a0f" },
+    { media: "(prefers-color-scheme: dark)", color: "#0c0c12" },
+    { media: "(prefers-color-scheme: light)", color: "#0c0c12" },
   ],
 };
 
@@ -156,11 +156,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={lexend.variable}>
+    <html lang="en" className={`${jetbrainsMono.variable}`}>
       <head>
         <JsonLd />
       </head>
-      <body className={`${lexend.className} antialiased min-h-screen`}>
+      <body className={`${jetbrainsMono.className} antialiased min-h-dvh`}>
         <Analytics />
         {children}
         <VercelAnalytics />

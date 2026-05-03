@@ -1,46 +1,31 @@
 export const COLORS = {
   bg: {
-    primary: '#0a0a0f',
-    secondary: '#111118',
-    card: 'rgba(17, 17, 24, 0.8)',
+    deep: "oklch(12% 0.02 260)",
+    surface: "oklch(18% 0.015 260)",
+    elevated: "oklch(24% 0.02 260)",
   },
-  cyan: {
-    DEFAULT: '#2ac6f8',
-    light: '#5dd8ff',
-    dark: '#1a8ab0',
-    glow: 'rgba(42, 198, 248, 0.4)',
-    glowStrong: 'rgba(42, 198, 248, 0.6)',
-  },
-  violet: {
-    DEFAULT: '#8B5CF6',
-    light: '#a78bfa',
-    dark: '#6d28d9',
-    glow: 'rgba(139, 92, 246, 0.4)',
-    glowStrong: 'rgba(139, 92, 246, 0.6)',
+  accent: {
+    warm: "oklch(65% 0.12 55)",
+    dim: "oklch(65% 0.12 55 / 0.15)",
+    glow: "oklch(65% 0.12 55 / 0.3)",
   },
   text: {
-    primary: '#f0f0f5',
-    secondary: '#9ca3af',
-    muted: '#6b7280',
-  },
-  border: {
-    subtle: 'rgba(255, 255, 255, 0.08)',
-    card: 'rgba(42, 198, 248, 0.2)',
-    hover: 'rgba(42, 198, 248, 0.5)',
+    primary: "oklch(95% 0.01 80)",
+    secondary: "oklch(72% 0.02 80)",
+    muted: "oklch(55% 0.015 80)",
   },
 } as const;
 
 export const ANIMATION = {
-  staggerChildren: 0.12,
+  staggerChildren: 0.08,
   entranceDuration: 0.6,
-  hoverScale: 1.03,
-  glowTransition: 0.3,
+  hoverTransition: 0.2,
 } as const;
 
 export const ROLES = [
-  'Cybersecurity Student',
-  'Full-Stack Developer',
-  'NeuroBridgeEDU Founder',
-  'EU-Green Ambassador',
-  'AI Innovator',
+  "Cybersecurity Student",
+  "Full-Stack Developer",
+  "NeuroBridgeEDU Founder",
+  "EU-Green Ambassador",
+  "AI Innovator",
 ] as const;
