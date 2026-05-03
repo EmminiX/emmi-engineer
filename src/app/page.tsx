@@ -2,6 +2,7 @@ import { CircuitTracesBackground } from "@/components/background/CircuitTracesBa
 import HeroSection from "@/components/sections/HeroSection";
 import LinkCards from "@/components/sections/LinkCards";
 import RolePills from "@/components/sections/RolePills";
+import Awards from "@/components/sections/Awards";
 import SocialBar from "@/components/sections/SocialBar";
 import Footer from "@/components/sections/Footer";
 
@@ -22,6 +23,7 @@ export default function Home() {
         <div id="links">
           <LinkCards />
         </div>
+        <Awards />
         <SocialBar />
         <Footer />
       </div>

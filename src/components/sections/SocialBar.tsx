@@ -1,14 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Github, Mail, Linkedin, Twitter, Instagram, AtSign } from "lucide-react";
+import { Github, Mail, Linkedin, Twitter } from "lucide-react";
 
 const SOCIALS = [
   { name: "LinkedIn", icon: Linkedin, url: "https://www.linkedin.com/in/emmic/", label: "LinkedIn" },
   { name: "GitHub", icon: Github, url: "https://github.com/EmminiX", label: "GitHub" },
   { name: "X", icon: Twitter, url: "https://x.com/deep_endX", label: "X / Twitter" },
-  { name: "Instagram", icon: Instagram, url: "https://www.instagram.com/deep_endx/", label: "Instagram" },
-  { name: "Threads", icon: AtSign, url: "https://www.threads.com/@deep_endx", label: "Threads" },
   { name: "Email", icon: Mail, url: "mailto:e.covasa@me.com", label: "Email" },
 ];
 

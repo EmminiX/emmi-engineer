@@ -4,10 +4,11 @@ import {
   Linkedin,
   Github,
   Twitter,
-  Instagram,
-  AtSign,
   Globe,
   Brain,
+  Shield,
+  ListTodo,
+  ShieldCheck,
 } from "lucide-react";
 import { LinkRow } from "@/components/ui/LinkRow";
 import { ANIMATION } from "@/lib/constants";
@@ -42,25 +43,32 @@ const LINKS = [
     ariaLabel: "Visit NeuroBridgeEDU platform",
   },
   {
+    title: "CyberSage",
+    description: "AI-powered security consultancy",
+    url: "https://cybersage.solutions",
+    icon: Shield,
+    ariaLabel: "Visit CyberSage security consultancy",
+  },
+  {
+    title: "TaskSage",
+    description: "Neurodivergent-friendly task workspace",
+    url: "https://tasksage.space",
+    icon: ListTodo,
+    ariaLabel: "Visit TaskSage task workspace",
+  },
+  {
+    title: "PromptSage",
+    description: "AI prompt injection defense",
+    url: "https://promptsage.cloud",
+    icon: ShieldCheck,
+    ariaLabel: "Visit PromptSage prompt security",
+  },
+  {
     title: "X / Twitter",
     description: "Thoughts, threads & deep dives",
     url: "https://x.com/deep_endX",
     icon: Twitter,
     ariaLabel: "Visit Emanuel's X (Twitter) profile",
-  },
-  {
-    title: "Instagram",
-    description: "Visual stories & moments",
-    url: "https://www.instagram.com/deep_endx/",
-    icon: Instagram,
-    ariaLabel: "Visit Emanuel's Instagram profile",
-  },
-  {
-    title: "Threads",
-    description: "Conversations & ideas",
-    url: "https://www.threads.com/@deep_endx",
-    icon: AtSign,
-    ariaLabel: "Visit Emanuel's Threads profile",
   },
 ];
 
