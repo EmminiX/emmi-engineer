@@ -4,13 +4,13 @@ import {
   Linkedin,
   Github,
   Twitter,
-  Instagram,
-  AtSign,
   Globe,
   Brain,
-  ArrowRight,
+  Shield,
+  ListTodo,
+  ShieldCheck,
 } from "lucide-react";
-import { CyberpunkCard } from "@/components/ui/CyberpunkCard";
+import { LinkRow } from "@/components/ui/LinkRow";
 import { ANIMATION } from "@/lib/constants";
 
 const LINKS = [
@@ -43,68 +43,56 @@ const LINKS = [
     ariaLabel: "Visit NeuroBridgeEDU platform",
   },
   {
+    title: "CyberSage",
+    description: "AI-powered security consultancy",
+    url: "https://cybersage.solutions",
+    icon: Shield,
+    ariaLabel: "Visit CyberSage security consultancy",
+  },
+  {
+    title: "TaskSage",
+    description: "Neurodivergent-friendly task workspace",
+    url: "https://tasksage.space",
+    icon: ListTodo,
+    ariaLabel: "Visit TaskSage task workspace",
+  },
+  {
+    title: "PromptSage",
+    description: "AI prompt injection defense",
+    url: "https://promptsage.cloud",
+    icon: ShieldCheck,
+    ariaLabel: "Visit PromptSage prompt security",
+  },
+  {
     title: "X / Twitter",
     description: "Thoughts, threads & deep dives",
     url: "https://x.com/deep_endX",
     icon: Twitter,
     ariaLabel: "Visit Emanuel's X (Twitter) profile",
   },
-  {
-    title: "Instagram",
-    description: "Visual stories & moments",
-    url: "https://www.instagram.com/deep_endx/",
-    icon: Instagram,
-    ariaLabel: "Visit Emanuel's Instagram profile",
-  },
-  {
-    title: "Threads",
-    description: "Conversations & ideas",
-    url: "https://www.threads.com/@deep_endx",
-    icon: AtSign,
-    ariaLabel: "Visit Emanuel's Threads profile",
-  },
 ];
 
 export default function LinkCards() {
   return (
-    <section className="relative z-20 py-4 px-4" aria-label="Links">
-      <div className="max-w-lg mx-auto space-y-3 sm:space-y-4">
-        {LINKS.map((link, i) => (
-          <CyberpunkCard
-            key={link.title}
-            href={link.url}
-            delay={0.3 + i * ANIMATION.staggerChildren}
-            ariaLabel={link.ariaLabel}
-          >
-            {/* Icon with glow on hover */}
-            <div className="flex-shrink-0 w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-cyber-cyan/15 to-cyber-violet/10 flex items-center justify-center transition-all duration-300">
-              <link.icon
-                size={22}
-                className="text-cyber-cyan icon-glow transition-colors duration-200"
-                strokeWidth={1.8}
-              />
-            </div>
+    <section className="relative z-10 py-4 px-4" aria-label="Links">
+      <div className="max-w-2xl mx-auto">
+        {/* Section label */}
+        <span className="section-label block mb-6">Connections</span>
 
-            {/* Text */}
-            <div className="flex-grow min-w-0 relative z-10">
-              <h2 className="text-base sm:text-lg font-semibold text-cyber-text transition-colors duration-200">
-                {link.title}
-              </h2>
-              <p className="text-xs sm:text-sm text-cyber-muted transition-colors duration-200 truncate">
-                {link.description}
-              </p>
-            </div>
-
-            {/* Arrow */}
-            <div className="flex-shrink-0 relative z-10">
-              <ArrowRight
-                size={18}
-                className="text-cyber-dim transition-all duration-200"
-                strokeWidth={1.5}
-              />
-            </div>
-          </CyberpunkCard>
-        ))}
+        {/* Links */}
+        <div>
+          {LINKS.map((link, i) => (
+            <LinkRow
+              key={link.title}
+              href={link.url}
+              title={link.title}
+              description={link.description}
+              icon={link.icon}
+              delay={i * ANIMATION.staggerChildren}
+              ariaLabel={link.ariaLabel}
+            />
+          ))}
+        </div>
       </div>
     </section>
   );

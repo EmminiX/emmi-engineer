@@ -9,31 +9,51 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        cyber: {
-          bg: "#0a0a0f",
-          surface: "#111118",
-          cyan: "#2ac6f8",
-          "cyan-light": "#5dd8ff",
-          violet: "#8B5CF6",
-          "violet-light": "#a78bfa",
-          text: "#f0f0f5",
-          muted: "#9ca3af",
-          dim: "#6b7280",
-        },
+        // Backgrounds
+        "bg-deep": "oklch(12% 0.02 260)",
+        "bg-surface": "oklch(18% 0.015 260)",
+        "bg-elevated": "oklch(24% 0.02 260)",
+        // Text
+        "text-primary": "oklch(95% 0.01 80)",
+        "text-secondary": "oklch(72% 0.02 80)",
+        "text-muted": "oklch(55% 0.015 80)",
+        // Accent — warm amber/copper, used sparingly
+        "accent-warm": "oklch(65% 0.12 55)",
+        "accent-dim": "oklch(65% 0.12 55 / 0.15)",
+        "accent-glow": "oklch(65% 0.12 55 / 0.3)",
       },
       fontFamily: {
-        lexend: ["Lexend", "sans-serif"],
+        display: ["Cabinet Grotesk", "system-ui", "sans-serif"],
+        body: ["Satoshi", "system-ui", "sans-serif"],
+        mono: ["JetBrains Mono", "monospace"],
       },
       animation: {
-        "fade-in-up": "fadeInUp 0.6s ease-out forwards",
-        "neon-pulse": "neon-pulse 3s ease-in-out infinite",
-        "border-glow": "border-glow 4s ease-in-out infinite",
-        float: "float 6s ease-in-out infinite",
+        "fade-in-up": "fadeInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards",
+        "fade-in": "fadeIn 0.5s ease-out forwards",
+        "scale-in": "scaleIn 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards",
+        "chevron-bounce": "chevronBounce 2s ease-in-out infinite",
+        "trace-draw": "traceDraw 3s ease-out forwards",
       },
       keyframes: {
         fadeInUp: {
-          "0%": { opacity: "0", transform: "translateY(24px)" },
+          "0%": { opacity: "0", transform: "translateY(16px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        fadeIn: {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        scaleIn: {
+          "0%": { opacity: "0", transform: "scale(0.95)" },
+          "100%": { opacity: "1", transform: "scale(1)" },
+        },
+        chevronBounce: {
+          "0%, 100%": { transform: "translateY(0)", opacity: "0.4" },
+          "50%": { transform: "translateY(6px)", opacity: "1" },
+        },
+        traceDraw: {
+          "0%": { strokeDashoffset: "1000" },
+          "100%": { strokeDashoffset: "0" },
         },
       },
     },
