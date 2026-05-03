@@ -74,7 +74,7 @@ const LINKS = [
 
 export default function LinkCards() {
   return (
-    <section className="relative z-10 py-4 px-4" aria-label="Links" id="links">
+    <section className="relative z-10 py-4 px-4" aria-label="Links">
       <div className="max-w-2xl mx-auto">
         {/* Section label */}
         <span className="section-label block mb-6">Connections</span>

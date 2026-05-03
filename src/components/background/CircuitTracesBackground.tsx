@@ -54,9 +54,15 @@ export function CircuitTracesBackground() {
   const tracesRef = useRef<Trace[]>([]);
   const animationFrameRef = useRef<number>(0);
   const [mounted, setMounted] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setPrefersReducedMotion(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
   }, []);
 
   useEffect(() => {
@@ -121,27 +127,33 @@ export function CircuitTracesBackground() {
     function animate() {
       if (!canvas || !ctx) return;
 
-      ctx.clearRect(0, 0, canvas.width / (window.devicePixelRatio || 1), canvas.height / (window.devicePixelRatio || 1));
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
       tracesRef.current.forEach((trace) => {
-        if (trace.drawProgress < 1) {
+        if (!prefersReducedMotion && trace.drawProgress < 1) {
           trace.drawProgress += trace.drawSpeed;
           if (trace.drawProgress > 1) trace.drawProgress = 1;
+        } else if (prefersReducedMotion) {
+          trace.drawProgress = 1;
         }
 
-        trace.pulse += trace.pulseSpeed;
+        if (!prefersReducedMotion) {
+          trace.pulse += trace.pulseSpeed;
 
-        if (trace.hasPulse && trace.drawProgress >= 1) {
-          const dx = trace.x2 - trace.x1;
-          const dy = trace.y2 - trace.y1;
-          const len = Math.sqrt(dx * dx + dy * dy);
-          trace.pulsePosition = ((Math.sin(trace.pulse * 0.3) + 1) / 2) * len;
+          if (trace.hasPulse && trace.drawProgress >= 1) {
+            const dx = trace.x2 - trace.x1;
+            const dy = trace.y2 - trace.y1;
+            const len = Math.sqrt(dx * dx + dy * dy);
+            trace.pulsePosition = ((Math.sin(trace.pulse * 0.3) + 1) / 2) * len;
+          }
         }
 
         drawTrace(ctx, trace);
       });
 
-      animationFrameRef.current = requestAnimationFrame(animate);
+      if (!prefersReducedMotion) {
+        animationFrameRef.current = requestAnimationFrame(animate);
+      }
     }
 
     animate();
@@ -150,7 +162,7 @@ export function CircuitTracesBackground() {
       window.removeEventListener("resize", updateCanvasSize);
       cancelAnimationFrame(animationFrameRef.current);
     };
-  }, [mounted]);
+  }, [mounted, prefersReducedMotion]);
 
   if (!mounted) {
     return (

@@ -36,7 +36,6 @@ export default function HeroSection() {
       >
         <CpuArchitecture
           text="EMMI"
-          className="cpu-glow"
           lineMarkerSize={18}
         />
       </motion.div>
@@ -73,8 +72,22 @@ function TypewriterTagline() {
   const [displayText, setDisplayText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const [pause, setPause] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setPrefersReducedMotion(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
+  useEffect(() => {
+    if (prefersReducedMotion) {
+      setDisplayText(ROLES[currentIndex]);
+      return;
+    }
+
     const currentRole = ROLES[currentIndex];
     const speed = isDeleting ? 40 : 80;
 
@@ -104,12 +117,17 @@ function TypewriterTagline() {
     }, speed);
 
     return () => clearTimeout(timer);
-  }, [displayText, isDeleting, pause, currentIndex]);
+  }, [displayText, isDeleting, pause, currentIndex, prefersReducedMotion]);
 
   return (
-    <span className="font-body text-fluid-sm text-text-secondary font-light tracking-wide">
-      {displayText}
-      <span className="inline-block w-[2px] h-[1.1em] bg-accent-warm ml-[2px] align-text-bottom animate-pulse" />
+    <span
+      className="font-body text-fluid-sm text-text-secondary font-light tracking-wide"
+      aria-label={ROLES[currentIndex]}
+    >
+      <span aria-hidden="true">{displayText}</span>
+      {!prefersReducedMotion && (
+        <span aria-hidden="true" className="inline-block w-[2px] h-[1.1em] bg-accent-warm ml-[2px] align-text-bottom animate-pulse" />
+      )}
     </span>
   );
 }
